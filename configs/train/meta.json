@@ -1,0 +1,22 @@
+{
+    "obs": {
+        "image": {
+            "shape": [
+                3,
+                320,
+                512
+            ],
+            "type": "rgb"
+        },
+        "agent_pos": {
+            "shape": [
+                16
+            ],
+            "type": "low_dim"
+        }
+    },
+    "action": {
+        "shape": [
+            16        ]
+    }
+}

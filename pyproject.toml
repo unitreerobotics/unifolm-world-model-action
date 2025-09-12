@@ -1,0 +1,53 @@
+[project]
+name = "unifolm_wma"
+version = "0.0.1"
+description = "UnifoLM-WMA-0"
+license = { text = "BSD-3-Clause" }
+authors = [
+    {name="Unitree Embodied AI R&D Team", email="rd_xyc@unitree.com"  }
+]
+requires-python = "==3.10.14"
+dependencies = [
+    "decord==0.6.0",
+    "einops==0.8.0",
+    "imageio==2.35.1",
+    "numpy==1.24.2",
+    "omegaconf==2.3.0",
+    "opencv-python==4.10.0.84",
+    "pandas==2.0.0",
+    "pillow==9.5.0",
+    "pytorch-lightning==1.9.3",
+    "pyyaml==6.0",
+    "setuptools==65.6.3",
+    "torch==2.3.1",
+    "torchvision==0.18.1",
+    "tqdm==4.66.5",
+    "transformers==4.40.1",
+    "moviepy==1.0.3",
+    "av==12.3.0",
+    "xformers==0.0.27",
+    "gradio==4.39.0",
+    "timm==0.9.10",
+    "scikit-learn==1.5.1",
+    "open-clip-torch==2.22.0",
+    "kornia==0.7.3",
+    "diffusers==0.30.2",
+    "termcolor==2.4.0",
+    "draccus==0.11.5",
+    "accelerate==1.7.0",
+    "tensorflow-metadata==1.16.1",
+    "protobuf==3.20.3",
+    "datasets==3.6.0",
+    "tensorflow-graphics==2021.12.3",
+    "fairscale==0.4.13"
+]
+
+[build-system]
+requires = ["setuptools>=65.6.3", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "" = "src"  }
+
+[tool.setuptools.packages.find]
+where = ["src"]

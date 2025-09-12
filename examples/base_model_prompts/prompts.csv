@@ -1,0 +1,17 @@
+videoid,instruction,fps,start_idx,fs,num_gen
+0,wash the pan,16.0,152.0,2.0,6.0
+1,pick up the blue cup and put it into the brown cup. ,5.0,0.0,2.0,4.0
+2,close top drawer,3.0,0.0,2.0,1.0
+3,Close the laptop.,10.0,0.0,2.0,4.0
+4,destack cube,5.0,0.0,2.0,3.0
+5,arrange plate and fork,20.0,40.0,2.0,4.0
+6,Place the lid on the teapot,15.0,30.0,1.0,4.0
+7,Pick up the green object and insert it.,10.0,0.0,2.0,4.0
+8,place the burger meat in the oven,10.0,0.0,2.0,2.0
+9,make a cup of coffee with the keurig machine,10.0,0.0,2.0,4.0
+10,assemble one_leg,10.0,0.0,2.0,7.0
+11,get the cloth and wipe up the spill under the wine glass,8.0,669.0,2.0,3.0
+12,palce dishes in the dish rack,10.0,0.0,2.0,4.0
+13,move redbull can near green can,3.0,3.0,2.0,1.0
+14,open the drawer,5.0,5.0,1.0,2.0
+15,sweep the green cloth to the left side of the table,5.0,0.0,2.0,3.0
