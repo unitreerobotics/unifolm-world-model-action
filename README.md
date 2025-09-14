@@ -97,7 +97,19 @@ target_dir/
     └──  dataset1_name.csv
 ```
 ## 🚴‍♂️ Training
-To conduct training on a single or multiple datasets, please follow the steps below:
+A. Our training strategy is outlined as follows:
+- **Step 1**: Fine-tune a video generation model as the world model using the [Open-X](https://robotics-transformer-x.github.io/) dataset;
+- **Step 2**: Post-train $\text{UnifoLM-WMA}$ in decision-making mode on the downstream task dataset;
+  <div align="left">
+      <img src="assets/pngs/dm_mode.png" width="600">
+  </div>
+- **Step 3**: Post-train $\text{UnifoLM-WMA}$ in simulation mode on the downstream task dataset.
+  <div align="left">
+      <img src="assets/pngs/sim_mode.png" width="600">
+  </div>
+**Note**: If you only require $\text{UnifoLM-WMA}$ to operate in a single mode, you may skip the corresponding step.
+
+B. To conduct training on a single or multiple datasets, please follow the steps below:
 - **Step 1**: The maximum DoF is assumed to be 16, if you have more than 16 DoF, update ```agent_state_dim``` and ```agent_action_dim``` in [configs/train/config.yaml](https://github.com/unitreerobotics/unifolm-wma/blob/working/configs/train/config.yaml) ;
 - **Step 2**: Set up the input shapes for each modality in [configs/train/meta.json](https://github.com/unitreerobotics/unitree-world-model/blob/main/configs/train/meta.json);
 - **Step 3**: Configure the training parameters in [configs/train/config.yaml](https://github.com/unitreerobotics/unitree-world-model/blob/main/configs/train/config.yaml). For the ```pretrained_checkpoint```, we recommend using the checkpoint " $\text{UnifoLM-WMA-0}_{Base}$ " fine-tuned on the [Open-X](https://robotics-transformer-x.github.io/) dataset;
@@ -172,4 +184,4 @@ unitree-world-model/
 ```
 
 ## 🙏 Acknowledgement
-Lots of code are inherieted from [DynamiCrafter](https://github.com/Doubiiu/DynamiCrafter), [Diffusion Policy](https://github.com/real-stanford/diffusion_policy) and [OpenVLA](https://github.com/openvla/openvla/tree/main).
+Lots of code are inherieted from [DynamiCrafter](https://github.com/Doubiiu/DynamiCrafter), [Diffusion Policy](https://github.com/real-stanford/diffusion_policy) and [HPT](https://github.com/liruiw/HPT).
