@@ -98,7 +98,19 @@ target_dir/
     └──  dataset1_name.csv
 ```
 ## 🚴‍♂️ 模型训练
-在单个或多个数据集上进行训练，请按照以下步骤操作：
+一. 我们的训练策略概括如下：
+- **步骤 1**：在 [Open-X](https://robotics-transformer-x.github.io/) 数据集上微调视频生成模型，使其作为世界模型（World Model）；
+- **步骤 2**：在下游任务数据集上，对 $\text{UnifoLM-WMA}$ 进行决策模式（decision-making mode）后训练；
+  <div align="left">
+   <img src="assets/pngs/dm_mode.png" width="600">
+  </div>
+- **步骤 3**：在下游任务数据集上，对 $\text{UnifoLM-WMA}$ 进行仿真模式（simulation mode）后训练。
+  <div align="left">
+   <img src="assets/pngs/sim_mode.png" width="600">
+  </div>
+**注意**：如果只需要 $\text{UnifoLM-WMA}$ 在单一模式下运行，可以跳过相应的步骤。
+
+二. 在单个或多个数据集上进行训练，请按照以下步骤操作：
 - **步骤1**：默认的最高自由度为16DOF，若需更多自由度，请修改[configs/train/config.yaml](https://github.com/unitreerobotics/unifolm-wma/blob/working/configs/train/config.yaml) 中 ```agent_state_dim``` 及 ```agent_action_dim``` 的数值；
 - **步骤2**：在 [configs/train/meta.json](https://github.com/unitreerobotics/unitree-world-model/blob/main/configs/train/meta.json) 中为每种模态设置输入维度；
 - **步骤3**： 在 [configs/train/config.yaml](https://github.com/unitreerobotics/unitree-world-model/blob/main/configs/train/config.yaml) 中配置训练参数及路径。关于预训练的模型，推荐使用 $\text{UnifoLM-WMA-0}_{Base}$ ，其在[Open-X](https://robotics-transformer-x.github.io/) 数据集上微调过；
@@ -171,4 +183,4 @@ unitree-world-model/
 ```
 
 ## 🙏 致谢声明
-本项目代码基于以下优秀开源项目构建，特此致谢：[DynamiCrafter](https://github.com/Doubiiu/DynamiCrafter), [Diffusion Policy](https://github.com/real-stanford/diffusion_policy) 和 [OpenVLA](https://github.com/openvla/openvla/tree/main).
+本项目代码基于以下优秀开源项目构建，特此致谢：[DynamiCrafter](https://github.com/Doubiiu/DynamiCrafter), [Diffusion Policy](https://github.com/real-stanford/diffusion_policy) 和 [HPT](https://github.com/liruiw/HPT).
