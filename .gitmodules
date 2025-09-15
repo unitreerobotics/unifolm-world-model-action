@@ -1,0 +1,3 @@
+[submodule "external/dlimp"]
+    path = external/dlimp
+    url = https://github.com/kvablack/dlimp
