@@ -18,7 +18,7 @@
 |:---:|:---:|
 | <img src="assets/gifs/real_cleanup_pencils.gif" style="border:none;box-shadow:none;margin:0;padding:0;" /> | <img src="assets/gifs/real_g1_pack_camera.gif" style="border:none;box-shadow:none;margin:0;padding:0;" /> |
 
-**注：右上角小窗口显示世界模型对未来环境变化的预测。**
+**注：右上角小窗口显示世界模型对未来动作视频的预测。**
 
 ## 📑 开源计划
 - [x] 训练代码 
