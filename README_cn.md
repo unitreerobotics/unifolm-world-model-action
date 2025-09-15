@@ -183,4 +183,4 @@ unitree-world-model/
 ```
 
 ## 🙏 致谢声明
-本项目代码基于以下优秀开源项目构建，特此致谢：[DynamiCrafter](https://github.com/Doubiiu/DynamiCrafter), [Diffusion Policy](https://github.com/real-stanford/diffusion_policy) 和 [HPT](https://github.com/liruiw/HPT).
+本项目代码基于以下优秀开源项目构建，特此致谢：[DynamiCrafter](https://github.com/Doubiiu/DynamiCrafter), [Diffusion Policy](https://github.com/real-stanford/diffusion_policy), [ACT](https://github.com/MarkFzp/act-plus-plus) 和 [HPT](https://github.com/liruiw/HPT).
