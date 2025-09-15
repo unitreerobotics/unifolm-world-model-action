@@ -37,9 +37,9 @@ conda install ffmpeg=7.1.1 -c conda-forge
 git clone --recurse-submodules https://github.com/unitreerobotics/unifolm-world-model-action.git
 
 # If you already downloaded the repo:
+cd unifolm-world-model-action
 git submodule update --init --recursive
 
-cd unifolm-world-model-action
 pip install -e .
 
 cd external/dlimp
