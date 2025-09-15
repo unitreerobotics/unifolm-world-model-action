@@ -18,7 +18,7 @@
 |:---:|:---:|
 | <img src="assets/gifs/real_cleanup_pencils.gif" style="border:none;box-shadow:none;margin:0;padding:0;" /> | <img src="assets/gifs/real_g1_pack_camera.gif" style="border:none;box-shadow:none;margin:0;padding:0;" /> |
 
-**Note: the top-right window shows the world model’s prediction of future environmental changes.**
+**Note: the top-right window shows the world model’s prediction of future action videos.**
 
 ## 📑 Opensource Plan
 - [x] Training 
