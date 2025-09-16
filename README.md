@@ -29,7 +29,7 @@
 ## ⚙️  Installation
 ```
 conda create -n unifolm-wma python==3.10.18
-conda activate unifolma
+conda activate unifol-wma
 
 conda install pinocchio=3.2.0 -c conda-forge -y
 conda install ffmpeg=7.1.1 -c conda-forge
