@@ -20,7 +20,7 @@
 
 **Note: the top-right window shows the world model’s prediction of future action videos.**
 
-## 🔥 News!!
+## 🔥 News
 
 * Sep 15, 2025: 🚀 We released the training and inference code along with the model weights of **UnifoLM-WMA-0**.
 
