@@ -1,7 +1,7 @@
 # UnifoLM-WMA-0: A World-Model-Action (WMA) Framework under UnifoLM Family
  <p style="font-size: 1.2em;">
     <a href="https://unigen-x.github.io/unifolm-world-model-action.github.io"><strong>项目主页</strong></a> | 
-    <a href="https://huggingface.co/unitreerobotics/UnifoLM-WMA-0"><strong>开源模型</strong></a> |
+    <a href="https://huggingface.co/collections/unitreerobotics/unifolm-wma-0-68ca23027310c0ca0f34959c"><strong>开源模型</strong></a> |
     <a href="https://huggingface.co/unitreerobotics/datasets"><strong>开源数据</strong></a> 
   </p>
 <div align="center">
