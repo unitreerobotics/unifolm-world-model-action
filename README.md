@@ -53,7 +53,7 @@ pip install -e .
 | Model | Description | Link|
 |---------|-------|------|
 |$\text{UnifoLM-WMA-0}_{Base}$| Fintuned on [Open-X](https://robotics-transformer-x.github.io/) dataset. | [HuggingFace](https://huggingface.co/unitreerobotics/UnifoLM-WMA-0-Base)|
-|$\text{UnifoLM-WMA-0}_{Dual}$| Fintuned on five [Unitree opensource dataset](https://huggingface.co/collections/unitreerobotics/g1-dex1-datasets-68bae98bf0a26d617f9983ab) in both decision-making and simulation modes. | [HuggingFace](https://huggingface.co/unitreerobotics/UnifoLM-WMA-0)|
+|$\text{UnifoLM-WMA-0}_{Dual}$| Fintuned on five [Unitree opensource dataset](https://huggingface.co/collections/unitreerobotics/g1-dex1-datasets-68bae98bf0a26d617f9983ab) in both decision-making and simulation modes. | [HuggingFace](https://huggingface.co/unitreerobotics/UnifoLM-WMA-0-Dual)|
 
 ## 🛢️ Dataset
 In our experiments, we consider the following three opensource dataset:
