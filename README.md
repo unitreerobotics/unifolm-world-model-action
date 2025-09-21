@@ -189,3 +189,12 @@ unitree-world-model/
 
 ## 🙏 Acknowledgement
 Lots of code are inherited from [DynamiCrafter](https://github.com/Doubiiu/DynamiCrafter), [Diffusion Policy](https://github.com/real-stanford/diffusion_policy), [ACT](https://github.com/MarkFzp/act-plus-plus) and [HPT](https://github.com/liruiw/HPT).
+
+## 📝 Citation
+```
+@misc{unifolm-wma-0,
+  author       = {Unitree},
+  title        = {UnifoLM-WMA-0: A World-Model-Action (WMA) Framework under UnifoLM Family},
+  year         = {2025},
+}
+```
