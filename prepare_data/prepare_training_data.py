@@ -74,7 +74,7 @@ def main(args):
 
     csv_file = target_dir / f"{args.dataset_name}.csv"
     COLUMNS = [
-        'videoid', 'contentUrl', 'duration', 'data_dir', 'name',
+        'videoid', 'contentUrl', 'duration', 'data_dir', 'instruction',
         'dynamic_confidence', 'dynamic_wording', 'dynamic_source_category',
         'embodiment'
     ]
