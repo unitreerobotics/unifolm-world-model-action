@@ -187,7 +187,7 @@ Run the following tests:
 
 # 3.🧠 Inference and Deploy
 1. [Modify the corresponding parameters according to your configuration](./unitree_deploy/robot/robot_configs.py)
-2. Go back the **step-2 of Client Setup** under the [Inference and Deployment under Decision-Making Mode](https://github.com/unitreerobotics/unitree-world-model/blob/main/README.md).
+2. Go back the **step-2 of Client Setup** under the [Inference and Deployment under Decision-Making Mode](https://github.com/unitreerobotics/unifolm-world-model-action/blob/main/README.md).
 
 # 4.🏗️ Code structure
 
