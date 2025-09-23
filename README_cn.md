@@ -28,9 +28,9 @@
 - [x] 训练代码 
 - [x] 推理代码 
 - [x] 模型Checkpoints
-- [ ] 真机部署代码
+- [x] 真机部署代码
 
-## ⚙️ 安装
+## ⚙️  安装
 ```
 conda create -n unifolm-wma python==3.10.18
 conda activate unifolm-wma
@@ -101,7 +101,7 @@ target_dir/
     │    └── ...
     └──  dataset1_name.csv
 ```
-## 🚴‍♂️ 模型训练
+## 🚴 ♂️ 模型训练
 一. 我们的训练策略概括如下：
 - **步骤 1**：在 [Open-X](https://robotics-transformer-x.github.io/) 数据集上微调视频生成模型，使其作为世界模型（World Model）；
 - **步骤 2**：在下游任务数据集上，对 $\text{UnifoLM-WMA}$ 进行决策模式（decision-making mode）后训练；
@@ -166,6 +166,31 @@ world_model_interaction_prompts/
     bash scripts/run_world_model_interaction.sh
     ```
   
+## 🧠 世界模型决策推理及部署
+在我们的系统中，推理在服务器端执行；机器人客户端从真实机器人收集观测信息并发送至服务器, 进行视频及动作推理。可通过如下步骤实现整个过程：
+
+### 服务器端设置
+- **步骤1**： 在 [scripts/run_real_eval_server.sh](https://github.com/unitreerobotics/unifolm-world-model-action/blob/main/scripts/run_real_eval_server.sh) 中指定 ```ckpt```、```res_dir```、```datasets```;
+- **步骤2**： 在 [config/inference/world_model_decision_making.yaml](https://github.com/unitreerobotics/unifolm-world-model-action/blob/f12b4782652ca00452941d851b17446e4ee7124a/configs/inference/world_model_decision_making.yaml#L225) 中配置 ```data_dir``` 和 ```dataset_and_weights```;
+- **步骤3**： 启动服务器：
+```
+conda activate unifolm-wma
+cd unifolm-world-model-action
+bash scripts/run_real_eval_server.sh
+```
+
+### 客户端设置
+- **步骤1**： 参考 [unitree_deploy/README.md](https://github.com/unitreerobotics/unifolm-world-model-action/blob/main/unitree_deploy/README.md)，创建 ```unitree_deploy``` conda 环境，安装所需依赖包，并在真实机器人端启动控制器或服务;
+- **步骤2**: 打开一个新的终端，从客户端到服务器建立隧道连接：
+```
+ssh user_name@remote_server_IP -CNg -L 8000:127.0.0.1:8000
+```
+- **步骤3**： 运行 ```unitree_deploy/robot_client.py``` 脚本以启动推理：
+```
+cd unitree_deploy
+python scripts/robot_client.py --robot_type "g1_dex1" --action_horizon 16 --exe_steps 16 --observation_horizon 2 --language_instruction "pack black camera into box" --output_dir ./results --control_freq 15
+```
+
 ## 📝 代码架构
 以下是本项目代码结构设计及核心组件说明：：
 ```
