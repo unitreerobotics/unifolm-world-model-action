@@ -1,5 +1,13 @@
 # Unitree Deploy 
 
+<div align="center">
+  <p align="right">
+    <span> 🌎English </span> | <a href="./docs/README_cn.md"> 🇨🇳中文 </a>
+  </p>
+</div>
+
+
+
 This document provides instructions for setting up the deployment environment for Unitree G1 (with gripper) and Z1 platforms, including dependency installation, image service startup, and gripper control.
 
 # 0. 📖 Introduction
