@@ -188,7 +188,7 @@ bash scripts/run_real_eval_server.sh
 ```
 ssh user_name@remote_server_IP -CNg -L 8000:127.0.0.1:8000
 ```
-- **Step-3**: Run the ```robot_client.py``` script to start inference:
+- **Step-3**: Run the ```unitree_deploy/robot_client.py``` script to start inference:
 ```
 cd unitree_deploy
 python scripts/robot_client.py --robot_type "g1_dex1" --action_horizon 16 --exe_steps 16 --observation_horizon 2 --language_instruction "pack black camera into box" --output_dir ./results --control_freq 15
