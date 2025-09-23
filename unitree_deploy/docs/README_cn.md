@@ -89,6 +89,9 @@ cd unitree_sdk2_python  && pip install -e . && cd ..
 
 - **G1 数据集回放**：
   ```bash
+  # --repo-id     Your unique repo ID on Hugging Face Hub 
+  # --robot_type     The type of the robot e.g., z1_dual_dex1_realsense, z1_realsense, g1_dex1, 
+
   python test/test_replay.py --repo-id unitreerobotics/G1_CameraPackaging_NewDataset --robot_type g1_dex1
   ```
 ---
@@ -113,8 +116,7 @@ cd unitree_sdk2_python  && pip install -e . && cd ..
 
 4. 启动 Z1 控制器 [根据您的路径修改]：
   ```bash
-  cd z1_controller/build
-  ./z1_ctrl
+  cd z1_controller/build && ./z1_ctrl
   ```
 
 ---
@@ -140,6 +142,9 @@ cd unitree_sdk2_python  && pip install -e . && cd ..
 
 - **Z1 数据集回放**：
   ```bash
+  # --repo-id     Your unique repo ID on Hugging Face Hub 
+  # --robot_type     The type of the robot e.g., z1_dual_dex1_realsense, z1_realsense, g1_dex1, 
+
   python test/test_replay.py --repo-id unitreerobotics/Z1_StackBox_Dataset --robot_type z1_realsense
   ```
 ---
@@ -180,6 +185,9 @@ cd unitree_sdk2_python  && pip install -e . && cd ..
 
 - **Z1_Dual 数据集回放**：
   ```bash
+  # --repo-id     Your unique repo ID on Hugging Face Hub 
+  # --robot_type     The type of the robot e.g., z1_dual_dex1_realsense, z1_realsense, g1_dex1,
+
   python test/test_replay.py --repo-id unitreerobotics/Z1_Dual_Dex1_StackBox_Dataset_V2 --robot_type z1_dual_dex1_realsense
   ```
 ---
