@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unitree_deploy"
+version = "0.0.3"
+description = "unitree deploy"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "BSD-3-Clause" }
+authors = [
+    { name = "hengguo", email = "rd_gh@unitree.com" }
+]
+keywords = ["unitree", "robotics", "deployment"]
+
+dependencies = [
+    "tyro",
+    "draccus",
+    "datasets==3.3.0",
+    "meshcat",
+    "pyrealsense2",
+    "numpy",
+    "opencv-python",
+    "mujoco",
+    "matplotlib",
+    "dm_env",
+    "torch>=2.2.1,<2.8.0",
+    "rerun-sdk>=0.21.0,<0.23.0",
+]
+[tool.setuptools]
+packages = ["unitree_deploy"]
+
+[project.optional-dependencies]
+lerobot = [
+    "lerobot @ git+https://github.com/huggingface/lerobot.git@0878c68"
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+exclude = ["build", "venv", "__pycache__"]
+fix = true
+show-fixes = true
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "N", "B", "C4", "SIM"]
+ignore = ["N801"]
+
+[tool.ruff.lint.per-file-ignores]
+"arm_indexs.py" = ["N815"]

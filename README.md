@@ -13,7 +13,7 @@
     <b>UnifoLM-WMA-0</b> is Unitree‘s open-source world-model–action architecture spanning multiple types of robotic embodiments, designed specifically for general-purpose robot learning. Its core component is a world-model capable of understanding the physical interactions between robots and the environments. This world-model provides two key functions: (a) <b>Simulation Engine</b> – operates as an interactive simulator to generate synthetic data for robot learning; (b) <b>Policy Enhancement</b> – connects with an action head and, by predicting future interaction processes with the world-model, further optimizes decision-making performance.
 </div>
 
-## 🦾 Real Robot Deployment
+## 🦾 Real-Robot Demonstrations
 | <img src="assets/gifs/real_z1_stackbox.gif" style="border:none;box-shadow:none;margin:0;padding:0;" /> | <img src="assets/gifs/real_dual_stackbox.gif" style="border:none;box-shadow:none;margin:0;padding:0;" /> |
 |:---:|:---:|
 | <img src="assets/gifs/real_cleanup_pencils.gif" style="border:none;box-shadow:none;margin:0;padding:0;" /> | <img src="assets/gifs/real_g1_pack_camera.gif" style="border:none;box-shadow:none;margin:0;padding:0;" /> |
@@ -22,13 +22,14 @@
 
 ## 🔥 News
 
-* Sep 15, 2025: 🚀 We released the training and inference code along with the model weights of **UnifoLM-WMA-0**.
+* Sep 22, 2025: 🚀 We released the deployment code for assisting experiments with [Unitree](https://www.unitree.com/) robots.
+* Sep 15, 2025: 🚀 We released the training and inference code along with the model weights of [**UnifoLM-WMA-0**](https://huggingface.co/collections/unitreerobotics/unifolm-wma-0-68ca23027310c0ca0f34959c).
 
 ## 📑 Opensource Plan
 - [x] Training 
 - [x] Inference
 - [x] Checkpoints
-- [ ] Deployment
+- [x] Deployment
 
 ## ⚙️  Installation
 ```
@@ -140,7 +141,7 @@ B. To conduct training on a single or multiple datasets, please follow the steps
 ```
 bash scripts/train.sh
 ```
-## 🌏 Inference under the Interactive Simulation Mode
+## 🌏 Inference under Interactive Simulation Mode
 To run the world model in an interactive simulation mode, follow these steps:
 - **Step 1**: (Skip this step if you just would like to test using the examples we provided) Prepare your own prompt following the format used in the [examples/world_model_interaction_prompts](https://github.com/unitreerobotics/unitree-world-model/tree/main/examples/world_model_interaction_prompts):
   ```
@@ -166,7 +167,33 @@ To run the world model in an interactive simulation mode, follow these steps:
     ```
     bash scripts/run_world_model_interaction.sh
     ```
-  
+
+## 🧠 Inference and Deployment under Decision-Making Mode
+
+In this setup, inference is performed on a server, while a robot client gathers observations from the real-robot and sends them to the server to query actions. The process unfolds through the following steps:
+
+### Server Setup:
+- **Step-1**: Specify ```ckpt```, ```res_dir```, ```datasets``` in scripts/run_real_eval_server.sh;
+- **Step-2**: Configure ```data_dir``` and ```dataset_and_weights``` in config/inference/world_model_decision_making.yaml;
+- **Step-3**: Launch the server:
+```
+conda activate unifolm-wma
+cd unifolm-world-model-action
+bash scripts/run_real_eval_server.sh
+```
+
+### Client Setup
+- **Step-1**: Follow the instructions in [unitree_deploy/README.md](https://github.com/unitreerobotics/unitree-world-model/blob/main/unitree_deploy/README.md) to create create the ```unitree_deploy``` conda environment, install the required packages, lanuch the controllers or services on the real-robot.
+- **Step-2**: Open a new terminal and establish a tunnel connection from the client to the server:
+```
+ssh user_name@remote_server_IP -CNg -L 8000:127.0.0.1:8000
+```
+- **Step-3**: Run the ```robot_client.py``` script to start inference:
+```
+cd unitree_deploy
+python scripts/robot_client.py --robot_type "g1_dex1" --action_horizon 16 --exe_steps 16 --observation_horizon 2 --language_instruction "pack black camera into box" --output_dir ./results --control_freq 15
+```
+
 ## 📝 Codebase Architecture
 Here's a high-level overview of the project's code structure and core components:
 ```
@@ -185,6 +212,7 @@ unitree-world-model/
     │    │      ├── models          # Model architectures and backbone definitions
     │    │      ├── modules         # Custom model modules and components
     │    │      └──  utils          # Utility functions and common helpers
+    └── unitree_deploy              # Depolyment code
 ```
 
 ## 🙏 Acknowledgement
