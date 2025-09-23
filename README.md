@@ -173,8 +173,8 @@ To run the world model in an interactive simulation mode, follow these steps:
 In this setup, inference is performed on a server, while a robot client gathers observations from the real-robot and sends them to the server to query actions. The process unfolds through the following steps:
 
 ### Server Setup:
-- **Step-1**: Specify ```ckpt```, ```res_dir```, ```datasets``` in scripts/run_real_eval_server.sh;
-- **Step-2**: Configure ```data_dir``` and ```dataset_and_weights``` in config/inference/world_model_decision_making.yaml;
+- **Step-1**: Specify ```ckpt```, ```res_dir```, ```datasets``` in [scripts/run_real_eval_server.sh](https://github.com/unitreerobotics/unifolm-world-model-action/blob/main/scripts/run_real_eval_server.sh);
+- **Step-2**: Configure ```data_dir``` and ```dataset_and_weights``` in [config/inference/world_model_decision_making.yaml](https://github.com/unitreerobotics/unifolm-world-model-action/blob/f12b4782652ca00452941d851b17446e4ee7124a/configs/inference/world_model_decision_making.yaml#L225);
 - **Step-3**: Launch the server:
 ```
 conda activate unifolm-wma
@@ -183,7 +183,7 @@ bash scripts/run_real_eval_server.sh
 ```
 
 ### Client Setup
-- **Step-1**: Follow the instructions in [unitree_deploy/README.md](https://github.com/unitreerobotics/unitree-world-model/blob/main/unitree_deploy/README.md) to create create the ```unitree_deploy``` conda environment, install the required packages, lanuch the controllers or services on the real-robot.
+- **Step-1**: Follow the instructions in [unitree_deploy/README.md](https://github.com/unitreerobotics/unifolm-world-model-action/blob/main/unitree_deploy/README.md) to create create the ```unitree_deploy``` conda environment, install the required packages, lanuch the controllers or services on the real-robot.
 - **Step-2**: Open a new terminal and establish a tunnel connection from the client to the server:
 ```
 ssh user_name@remote_server_IP -CNg -L 8000:127.0.0.1:8000
