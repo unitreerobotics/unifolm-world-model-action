@@ -18,7 +18,7 @@
 |:---:|:---:|
 | <img src="assets/gifs/real_cleanup_pencils.gif" style="border:none;box-shadow:none;margin:0;padding:0;" /> | <img src="assets/gifs/real_g1_pack_camera.gif" style="border:none;box-shadow:none;margin:0;padding:0;" /> |
 
-**Note: the top-right window shows the world model’s prediction of future action videos.**
+**Note: the top-right window shows the world model’s pretion of future action videos.**
 
 ## 🔥 News
 
@@ -53,8 +53,8 @@ pip install -e .
 ## 🧰 Model Checkpoints
 | Model | Description | Link|
 |---------|-------|------|
-|$\text{UnifoLM-WMA-0}_{Base}$| Fintuned on [Open-X](https://robotics-transformer-x.github.io/) dataset. | [HuggingFace](https://huggingface.co/unitreerobotics/UnifoLM-WMA-0-Base)|
-|$\text{UnifoLM-WMA-0}_{Dual}$| Fintuned on five [Unitree opensource dataset](https://huggingface.co/collections/unitreerobotics/g1-dex1-datasets-68bae98bf0a26d617f9983ab) in both decision-making and simulation modes. | [HuggingFace](https://huggingface.co/unitreerobotics/UnifoLM-WMA-0-Dual)|
+|$\text{UnifoLM-WMA-0}_{Base}$| Fine-tuned on [Open-X](https://robotics-transformer-x.github.io/) dataset. | [HuggingFace](https://huggingface.co/unitreerobotics/UnifoLM-WMA-0-Base)|
+|$\text{UnifoLM-WMA-0}_{Dual}$| Fine-tuned on five [Unitree opensource dataset](https://huggingface.co/collections/unitreerobotics/g1-dex1-datasets-68bae98bf0a26d617f9983ab) in both decision-making and simulation modes. | [HuggingFace](https://huggingface.co/unitreerobotics/UnifoLM-WMA-0-Dual)|
 
 ## 🛢️ Dataset
 In our experiments, we consider the following three opensource dataset:
@@ -122,7 +122,7 @@ B. To conduct training on a single or multiple datasets, please follow the steps
   model:
       pretrained_checkpoint: /path/to/pretrained/checkpoint;
       ...
-      dicision_making_only: True # Train the world model only in decision-making mode. If False, jointly train it in both decision-making and simulation modes.
+      decision_making_only: True # Train the world model only in decision-making mode. If False, jointly train it in both decision-making and simulation modes.
       ...
   data:
       ...
@@ -137,7 +137,7 @@ B. To conduct training on a single or multiple datasets, please follow the steps
           dataset5_name: 0.2
   ```
 - **Step 4**: Setup ```experiment_name```, ```save_root``` variables in [scripts/train.sh](https://github.com/unitreerobotics/unitree-world-model/blob/main/scripts/train.sh);
-- **Step 5**: Lanuch the training with the command:
+- **Step 5**: Launch the training with the command:
 ```
 bash scripts/train.sh
 ```
@@ -163,7 +163,7 @@ To run the world model in an interactive simulation mode, follow these steps:
     └── ...
   ```
 - **Step 2**: Specify the correct paths for ```pretrained_checkpoint```(e.g, $\text{UnifoLM-WMA-0}_{Dual}$) and ```data_dir``` in [configs/inference/world_model_interaction.yaml](https://github.com/unitreerobotics/unitree-world-model/blob/main/configs/inference/world_model_interaction.yaml) 
-- **Step 3**: Set the paths for ```checkpoint```, ```res_dir``` and ```prompt_dir``` in [scripts/run_world_model_interaction.sh](https://github.com/unitreerobotics/unitree-world-model/blob/main/scripts/run_world_model_interaction.sh), and specify all the dataset's name in ```datasets=(...)```. Then, lanuch the inference with the command:
+- **Step 3**: Set the paths for ```checkpoint```, ```res_dir``` and ```prompt_dir``` in [scripts/run_world_model_interaction.sh](https://github.com/unitreerobotics/unitree-world-model/blob/main/scripts/run_world_model_interaction.sh), and specify all the dataset's name in ```datasets=(...)```. Then, launch the inference with the command:
     ```
     bash scripts/run_world_model_interaction.sh
     ```
@@ -183,7 +183,7 @@ bash scripts/run_real_eval_server.sh
 ```
 
 ### Client Setup
-- **Step-1**: Follow the instructions in [unitree_deploy/README.md](https://github.com/unitreerobotics/unifolm-world-model-action/blob/main/unitree_deploy/README.md) to create create the ```unitree_deploy``` conda environment, install the required packages, lanuch the controllers or services on the real-robot.
+- **Step-1**: Follow the instructions in [unitree_deploy/README.md](https://github.com/unitreerobotics/unifolm-world-model-action/blob/main/unitree_deploy/README.md) to create the ```unitree_deploy``` conda environment, install the required packages, launch the controllers or services on the real-robot.
 - **Step-2**: Open a new terminal and establish a tunnel connection from the client to the server:
 ```
 ssh user_name@remote_server_IP -CNg -L 8000:127.0.0.1:8000
@@ -212,7 +212,7 @@ unitree-world-model/
     │    │      ├── models          # Model architectures and backbone definitions
     │    │      ├── modules         # Custom model modules and components
     │    │      └──  utils          # Utility functions and common helpers
-    └── unitree_deploy              # Depolyment code
+    └── unitree_deploy              # Deployment code
 ```
 
 ## 🙏 Acknowledgement
