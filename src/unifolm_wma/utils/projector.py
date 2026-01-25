@@ -87,14 +87,14 @@ class PerceiverAttention(nn.Module):
 
 def FeedForward(dim, mult=4, ffd_type="gelu-ffd"):
     inner_dim = int(dim * mult)
-    if ffd_type = "gelu-ffd":
+    if ffd_type == "gelu-ffd":
         return nn.Sequential(
             nn.LayerNorm(dim),
             nn.Linear(dim, inner_dim, bias=False),
             nn.GELU(approximate='tanh'),
             nn.Linear(inner_dim, dim, bias=False),
         )
-    elif ffd_type = "silu-ffd":
+    elif ffd_type == "silu-ffd":
         return nn.Sequential(
             nn.LayerNorm(dim),
             nn.Linear(dim, inner_dim, bias=False),
@@ -138,7 +138,7 @@ class TokenProjector(nn.Module):
                 )
             )
 
-    def forward(self, x)
+    def forward(self, x):
         latents = self.latents.repeat(x.size(0), 1, 1)
         for attn, ff in self.layers:
             latents = attn(x, latents) + latents
