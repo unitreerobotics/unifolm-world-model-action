@@ -2214,7 +2214,7 @@ class LatentVisualDiffusion(LatentDiffusion):
 
         cond["c_crossattn_action"] = [
             obs[:, :, -self.n_obs_steps_acting:],
-            state[:, -self.n_obs_steps_acting:], is_sim_mode,
+            obs_state[:, -self.n_obs_steps_acting:], is_sim_mode,
             batch['state_mask'], batch['action_mask']
         ]
 
