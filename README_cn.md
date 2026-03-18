@@ -67,6 +67,7 @@ pip install -e .
 |G1_Pack_Camera|[Unitree G1](https://www.unitree.com/g1)|[Huggingface](https://huggingface.co/datasets/unitreerobotics/G1_Dex1_MountCameraRedGripper_Dataset/tree/v2.1)|
 
 #### Extra available dataset
+该数据集是通过使用 Unitree G1 机器人及其具有 7 个自由度的灵巧手臂收集而成的，涵盖了单臂和双臂设置下的多种桌面操作任务。它适用于视频生成模型、世界模型以及其他下游应用。每个回合持续约 30 秒。可用的图像分辨率：256×256 和 128×128。
 | 数据集 | 机器人 | 链接 |
 |---------|-------|------|
 |G1_Dex1_DiverseManip_DualArm_256x256|[Unitree G1](https://www.unitree.com/g1)|[Huggingface](https://huggingface.co/datasets/unitreerobotics/G1_Dex1_DiverseManip_DualArm_256x256)|

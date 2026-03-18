@@ -67,6 +67,8 @@ In our experiments, we consider the following five opensource dataset:
 |G1_Pack_Camera|[Unitree G1](https://www.unitree.com/g1)|[Huggingface](https://huggingface.co/datasets/unitreerobotics/G1_Dex1_MountCameraRedGripper_Dataset/tree/v2.1)|
 
 #### Extra available dataset
+This dataset is collected using the Unitree G1 robot with a 7-DOF dexterous arm, covering a variety of table-top manipulation tasks in both single-arm and dual-arm settings. It is suitable for training video generation models, world models, and other downstream applications. Each episode lasts approximately 30 seconds. Available image resolutions: 256×256 and 128×128.
+
 | Dataset | Robot | Link |
 |---------|-------|------|
 |G1_Dex1_DiverseManip_DualArm_256x256|[Unitree G1](https://www.unitree.com/g1)|[Huggingface](https://huggingface.co/datasets/unitreerobotics/G1_Dex1_DiverseManip_DualArm_256x256)|
