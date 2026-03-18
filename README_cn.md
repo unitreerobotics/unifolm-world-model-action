@@ -66,6 +66,14 @@ pip install -e .
 |Z1_DualArm_Cleanup_Pencils|[Unitree Z1](https://www.unitree.com/z1)|[Huggingface](https://huggingface.co/datasets/unitreerobotics/Z1_Dual_Dex1_CleanupPencils_Dataset/tree/v2.1)|
 |G1_Pack_Camera|[Unitree G1](https://www.unitree.com/g1)|[Huggingface](https://huggingface.co/datasets/unitreerobotics/G1_Dex1_MountCameraRedGripper_Dataset/tree/v2.1)|
 
+### Extra available dataset
+| 数据集 | 机器人 | 链接 |
+|---------|-------|------|
+|G1_Dex1_DiverseManip_DualArm_256x256|[Unitree G1](https://www.unitree.com/g1)|[Huggingface](https://huggingface.co/datasets/unitreerobotics/G1_Dex1_DiverseManip_DualArm_256x256)|
+|G1_Dex1_DiverseManip_DualArm_128x128|[Unitree G1](https://www.unitree.com/g1)|[Huggingface](https://huggingface.co/datasets/unitreerobotics/G1_Dex1_DiverseManip_DualArm_128x128)|
+|G1_Dex1_DiverseManip_SingleArm_256x256|[Unitree G1](https://www.unitree.com/g1)|[Huggingface](https://huggingface.co/datasets/unitreerobotics/G1_Dex1_DiverseManip_SingleArm_256x256)|
+|G1_Dex1_DiverseManip_SingleArm_128x128|[Unitree G1](https://www.unitree.com/g1)|[Huggingface](https://huggingface.co/datasets/unitreerobotics/G1_Dex1_DiverseManip_SingleArm_128x128)|
+
 要在自定义数据集上训练，请首先确保数据符合 [Huggingface LeRobot V2.1](https://github.com/huggingface/lerobot)  数据集格式，假设下载后的数据目录结构如下：
 ```
 source_dir/
