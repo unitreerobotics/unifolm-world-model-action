@@ -1,6 +1,7 @@
 model:
   target: unifolm_wma.models.ddpms.LatentVisualDiffusion
   params:
+    pretrained_checkpoint: '/home/waheedbrown/workspaces/git/unifolm-world-model-action/waheed_models/unifolm_wma_base.ckpt'
     rescale_betas_zero_snr: True
     parameterization: "v"
     linear_start: 0.00085
@@ -222,7 +223,7 @@ data:
     test:
       target: unifolm_wma.data.wma_data.WMAData
       params:
-        data_dir: '/path/to/unifolm-world-model-action/examples/world_model_interaction_prompts'
+        data_dir: '/home/waheedbrown/workspaces/git/unifolm-world-model-action/examples/world_model_interaction_prompts'
         video_length: ${model.params.wma_config.params.temporal_length}
         frame_stride: 2
         load_raw_resolution: True

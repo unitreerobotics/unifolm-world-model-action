@@ -87,7 +87,7 @@ def load_model_checkpoint(model: nn.Module, ckpt: str) -> nn.Module:
     if "state_dict" in list(state_dict.keys()):
         state_dict = state_dict["state_dict"]
         try:
-            model.load_state_dict(state_dict, strict=True)
+            model.load_state_dict(state_dict, strict=False)
         except:
             new_pl_sd = OrderedDict()
             for k, v in state_dict.items():
@@ -98,12 +98,12 @@ def load_model_checkpoint(model: nn.Module, ckpt: str) -> nn.Module:
                     new_key = k.replace("framestride_embed", "fps_embedding")
                     new_pl_sd[new_key] = new_pl_sd[k]
                     del new_pl_sd[k]
-            model.load_state_dict(new_pl_sd, strict=True)
+            model.load_state_dict(new_pl_sd, strict=False)
     else:
         new_pl_sd = OrderedDict()
         for key in state_dict['module'].keys():
             new_pl_sd[key[16:]] = state_dict['module'][key]
-        model.load_state_dict(new_pl_sd)
+        model.load_state_dict(new_pl_sd, strict=False)
     print('>>> model checkpoint loaded.')
     return model
 
@@ -470,7 +470,10 @@ def run_inference(args: argparse.Namespace, gpu_num: int, gpu_no: int) -> None:
     data.setup()
     print(">>> Dataset is successfully loaded ...")
 
-    model = model.cuda(gpu_no)
+    if torch.cuda.is_available():
+        model = model.cuda(gpu_no)
+    else:
+        print(">>> CUDA is not available, falling back to CPU. (Note: this may be VERY slow)")
     device = get_device_from_parameters(model)
 
     # Run over data

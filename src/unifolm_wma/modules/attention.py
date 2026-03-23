@@ -125,7 +125,6 @@ class CrossAttention(nn.Module):
         context = default(context, x)
 
         if self.image_cross_attention and not spatial_self_attn:
-            assert 1 > 2, ">>> ERROR: should setup xformers and use efficient_forward ..."
             context_agent_state = context[:, :self.agent_state_context_len, :]
             context_agent_action = context[:,
                                            self.agent_state_context_len:self.

@@ -1,8 +1,8 @@
 model_name=testing
-ckpt=/path/to/model/checkpoint
+ckpt=/home/waheedbrown/workspaces/git/unifolm-world-model-action/waheed_models/unifolm_wma_base.ckpt
 config=configs/inference/world_model_interaction.yaml
 seed=123
-res_dir="/path/to/result/directory"
+res_dir="/home/waheedbrown/workspaces/git/unifolm-world-model-action/results"
 
 datasets=(
     "unitree_z1_stackbox"
@@ -29,7 +29,7 @@ for i in "${!datasets[@]}"; do
     --unconditional_guidance_scale 1.0 \
     --ddim_steps 50 \
     --ddim_eta 1.0 \
-    --prompt_dir "/path/to/unifolm-world-model-action/examples/world_model_interaction_prompts" \
+    --prompt_dir "/home/waheedbrown/workspaces/git/unifolm-world-model-action/examples/world_model_interaction_prompts" \
     --dataset ${dataset} \
     --video_length 16 \
     --frame_stride ${fs} \
