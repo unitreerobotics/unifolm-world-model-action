@@ -49,7 +49,9 @@ class ClassEmbedder(nn.Module):
         c = self.embedding(c)
         return c
 
-    def get_unconditional_conditioning(self, bs, device="cuda"):
+    def get_unconditional_conditioning(self, bs, device=None):
+        if device is None:
+            device = "cuda" if torch.cuda.is_available() else "cpu"
         uc_class = self.n_classes - 1  # 1000 classes --> 0 ... 999, one extra class for ucg (class 1000)
         uc = torch.ones((bs, ), device=device) * uc_class
         uc = {self.key: uc}
@@ -67,7 +69,7 @@ class FrozenT5Embedder(AbstractEncoder):
 
     def __init__(self,
                  version="google/t5-v1_1-xxl",
-                 device="cuda",
+                 device='cuda' if torch.cuda.is_available() else 'cpu',
                  max_length=77,
                  freeze=True
                  ):  # others are google/t5-v1_1-xl and google/t5-v1_1-xxl
@@ -109,7 +111,7 @@ class FrozenCLIPEmbedder(AbstractEncoder):
 
     def __init__(self,
                  version="openai/clip-vit-large-patch14",
-                 device="cuda",
+                 device='cuda' if torch.cuda.is_available() else 'cpu',
                  max_length=77,
                  freeze=True,
                  layer="last",
@@ -215,7 +217,7 @@ class FrozenOpenCLIPEmbedder(AbstractEncoder):
     def __init__(self,
                  arch="ViT-H-14",
                  version="laion2b_s32b_b79k",
-                 device="cuda",
+                 device='cuda' if torch.cuda.is_available() else 'cpu',
                  max_length=77,
                  freeze=True,
                  layer="last"):
@@ -281,7 +283,7 @@ class FrozenOpenCLIPImageEmbedder(AbstractEncoder):
     def __init__(self,
                  arch="ViT-H-14",
                  version="laion2b_s32b_b79k",
-                 device="cuda",
+                 device='cuda' if torch.cuda.is_available() else 'cpu',
                  max_length=77,
                  freeze=True,
                  layer="pooled",
@@ -358,7 +360,7 @@ class FrozenOpenCLIPImageEmbedderV2(AbstractEncoder):
     def __init__(self,
                  arch="ViT-H-14",
                  version="laion2b_s32b_b79k",
-                 device="cuda",
+                 device='cuda' if torch.cuda.is_available() else 'cpu',
                  freeze=True,
                  layer="pooled",
                  antialias=True):
@@ -457,7 +459,7 @@ class FrozenCLIPT5Encoder(AbstractEncoder):
     def __init__(self,
                  clip_version="openai/clip-vit-large-patch14",
                  t5_version="google/t5-v1_1-xl",
-                 device="cuda",
+                 device='cuda' if torch.cuda.is_available() else 'cpu',
                  clip_max_length=77,
                  t5_max_length=77):
         super().__init__()

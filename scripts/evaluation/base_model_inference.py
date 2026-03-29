@@ -4,7 +4,8 @@ import pandas as pd
 import torch
 import torchvision
 import torchvision.transforms as transforms
-import random
+import warnings
+import imageio
 
 from pytorch_lightning import seed_everything
 from PIL import Image
@@ -224,11 +225,7 @@ def save_results_seperate(prompt: str | list[str],
             grid = (grid + 1.0) / 2.0
             grid = (grid * 255).to(torch.uint8).permute(1, 2, 3, 0)
             path = os.path.join(savedirs[idx], f'{filename.split(".")[0]}.mp4')
-            torchvision.io.write_video(path,
-                                       grid,
-                                       fps=fps,
-                                       video_codec='h264',
-                                       options={'crf': '0'})
+            imageio.mimsave(path, list(grid.numpy()), fps=fps)
 
 
 def get_latent_z(model: torch.nn.Module, videos: torch.Tensor) -> torch.Tensor:

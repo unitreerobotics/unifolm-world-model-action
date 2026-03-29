@@ -1,0 +1,6 @@
+Using pip 26.0.1 from /home/waheedbrown/miniconda3/envs/unifolm-wma/lib/python3.10/site-packages/pip (python 3.10)
+Collecting xformers
+  Downloading xformers-0.0.35.tar.gz (4.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.3/4.3 MB 29.5 MB/s  0:00:00
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'error'
