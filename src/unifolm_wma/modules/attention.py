@@ -291,11 +291,28 @@ class CrossAttention(nn.Module):
                         b * self.heads, t.shape[1], self.dim_head).contiguous(),
                 (k, v),
             )
-            out = xformers.ops.memory_efficient_attention(q,
-                                                          k,
-                                                          v,
-                                                          attn_bias=None,
-                                                          op=None)
+
+            # NVIDIA DGX Spark CUDA 12.1 xformers compatibility
+            # 1. Save original dtype and cast to bfloat16 for Blackwell
+            orig_dtype = q.dtype
+            q, k, v = q.to(torch.bfloat16), k.to(torch.bfloat16), v.to(torch.bfloat16)
+
+            # 2. Use the existing xformers call
+            if q.is_cuda and torch.cuda.get_device_capability(q.device)[0] >= 12:
+                out = F.scaled_dot_product_attention(q.unsqueeze(1),
+                                                     k.unsqueeze(1),
+                                                     v.unsqueeze(1),
+                                                     attn_mask=None).squeeze(1)
+            else:
+                out = xformers.ops.memory_efficient_attention(q,
+                                                              k,
+                                                              v,
+                                                              attn_bias=None,
+                                                              op=None)
+            
+            # 3. Cast the output back to prevent downstream type mismatches
+            out = out.to(orig_dtype)
+
             out = (out.unsqueeze(0).reshape(
                 b, self.heads, out.shape[1],
                 self.dim_head).permute(0, 2, 1,
@@ -311,11 +328,27 @@ class CrossAttention(nn.Module):
                         ),
                 (k_ip, v_ip),
             )
-            out_ip = xformers.ops.memory_efficient_attention(q,
-                                                             k_ip,
-                                                             v_ip,
-                                                             attn_bias=None,
-                                                             op=None)
+
+            # NVIDIA DGX Spark CUDA 12.1 xformers compatibility
+            # Query/Key/Value all need the same dtype
+            # 1. Cast k and v to bfloat16
+            k_ip, v_ip = k_ip.to(torch.bfloat16), v_ip.to(torch.bfloat16)
+
+            if q.is_cuda and torch.cuda.get_device_capability(q.device)[0] >= 12:
+                out_ip = F.scaled_dot_product_attention(q.unsqueeze(1),
+                                                         k_ip.unsqueeze(1),
+                                                         v_ip.unsqueeze(1),
+                                                         attn_mask=None).squeeze(1)
+            else:
+                out_ip = xformers.ops.memory_efficient_attention(q,
+                                                                 k_ip,
+                                                                 v_ip,
+                                                                 attn_bias=None,
+                                                                 op=None)
+            
+            # 2. Cast output back to float32
+            out_ip = out_ip.to(orig_dtype)
+
             out_ip = (out_ip.unsqueeze(0).reshape(
                 b, self.heads, out_ip.shape[1],
                 self.dim_head).permute(0, 2, 1,
@@ -331,11 +364,27 @@ class CrossAttention(nn.Module):
                         ),
                 (k_as, v_as),
             )
-            out_as = xformers.ops.memory_efficient_attention(q,
-                                                             k_as,
-                                                             v_as,
-                                                             attn_bias=None,
-                                                             op=None)
+
+            # NVIDIA DGX Spark CUDA 12.1 xformers compatibility
+            # Query/Key/Value all need the same dtype
+            # 1. Cast k and v to bfloat16
+            k_as, v_as = k_as.to(torch.bfloat16), v_as.to(torch.bfloat16)
+
+            if q.is_cuda and torch.cuda.get_device_capability(q.device)[0] >= 12:
+                out_as = F.scaled_dot_product_attention(q.unsqueeze(1),
+                                                         k_as.unsqueeze(1),
+                                                         v_as.unsqueeze(1),
+                                                         attn_mask=None).squeeze(1)
+            else:
+                out_as = xformers.ops.memory_efficient_attention(q,
+                                                                 k_as,
+                                                                 v_as,
+                                                                 attn_bias=None,
+                                                                 op=None)
+            
+            # 2. Cast output back to float32
+            out_as = out_as.to(orig_dtype)
+
             out_as = (out_as.unsqueeze(0).reshape(
                 b, self.heads, out_as.shape[1],
                 self.dim_head).permute(0, 2, 1,
@@ -353,10 +402,26 @@ class CrossAttention(nn.Module):
 
             attn_mask_aa = attn_mask_aa.unsqueeze(1).repeat(1,self.heads,1,1).reshape(
                     b * self.heads, attn_mask_aa.shape[1], attn_mask_aa.shape[2])
-            attn_mask_aa = attn_mask_aa.to(q.dtype)
+            
+            # NVIDIA DGX Spark CUDA 12.1 xformers compatibility
+            # Query/Key/Value all need the same dtype
+            # 1. Cast k and v to bfloat16
+            k_aa, v_aa = k_aa.to(torch.bfloat16), v_aa.to(torch.bfloat16)
 
-            out_aa = xformers.ops.memory_efficient_attention(
-                q, k_aa, v_aa, attn_bias=attn_mask_aa, op=None)
+            # 2. The mask needs to match the cast type
+            attn_mask_aa = attn_mask_aa.to(torch.bfloat16)
+
+            if q.is_cuda and torch.cuda.get_device_capability(q.device)[0] >= 12:
+                out_aa = F.scaled_dot_product_attention(q.unsqueeze(1),
+                                                         k_aa.unsqueeze(1),
+                                                         v_aa.unsqueeze(1),
+                                                         attn_mask=attn_mask_aa.unsqueeze(1)).squeeze(1)
+            else:
+                out_aa = xformers.ops.memory_efficient_attention(
+                    q, k_aa, v_aa, attn_bias=attn_mask_aa, op=None)
+
+            # 3. Cast output back to float32
+            out_aa = out_aa.to(orig_dtype)
 
             out_aa = (out_aa.unsqueeze(0).reshape(
                 b, self.heads, out_aa.shape[1],

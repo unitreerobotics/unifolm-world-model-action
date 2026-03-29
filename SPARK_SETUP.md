@@ -37,17 +37,18 @@ Guide PyTorch to target the Blackwell architecture:
 export TORCH_CUDA_ARCH_LIST="12.1"
 ```
 
-## 2. Codebase Adaptations for Robustness
+## 3. Codebase Adaptations for Robustness
 
 Several hardcoded `cuda` calls and strict loading requirements were modified to allow for device-agnostic execution and loading of base models:
 
+- **Blackwell-Specific Attention:** Added a high-performance fallback for Blackwell GPUs (capability 12.0+). When `xformers` is unavailable or incompatible, the model now automatically uses PyTorch's `F.scaled_dot_product_attention` (SDPA) with `bfloat16` casting. This resolves the `NotImplementedError` previously seen on GB10 GPUs while maintaining peak performance.
+- **Video IO Compatibility:** Replaced all calls to `torchvision.io.write_video` with `imageio.mimsave`. This fixes an `AttributeError` on systems where the `torchvision` build lacks native video IO support (a common issue on custom aarch64/CUDA 13.0 environments).
 - **Checkpoint Loading:** Updated `scripts/evaluation/world_model_interaction.py` to use `strict=False` in `load_state_dict`. This allows the base model (which lacks specific action/state heads) to load correctly.
 - **Device Agnostic Encoders:** Updated all encoders in `src/unifolm_wma/modules/encoders/condition.py` to check for CUDA availability instead of defaulting to `"cuda"`.
 - **Vision Backbone:** Updated `src/unifolm_wma/modules/vision/dinosiglip_vit.py` to move tensors to the device of the model parameters.
 - **Sampler Fix:** Fixed `src/unifolm_wma/models/samplers/ddim.py` to use `self.model.device` in `register_buffer`.
-- **Xformers Assertion:** Removed a hardcoded assertion in `src/unifolm_wma/modules/attention.py` that forced `xformers` usage, allowing a fallback to standard PyTorch attention.
 
-## 3. Performance Bottlenecks & Missing Wheels
+## 4. Performance Bottlenecks & Missing Wheels
 
 Performance is currently limited by the absence of specialized Blackwell (SM 12.1) binaries for libraries like `xformers`.
 

@@ -107,11 +107,7 @@ def save_results(video: torch.Tensor, filename: str, fps: int = 8) -> None:
     grid = torch.stack(frame_grids, dim=0)
     grid = (grid + 1.0) / 2.0
     grid = (grid * 255).to(torch.uint8).permute(0, 2, 3, 1)
-    torchvision.io.write_video(filename,
-                               grid,
-                               fps=fps,
-                               video_codec='h264',
-                               options={'crf': '10'})
+    imageio.mimsave(filename, list(grid.numpy()), fps=fps)
 
 
 def get_latent_z(model: nn.Module, videos: torch.Tensor) -> torch.Tensor:
