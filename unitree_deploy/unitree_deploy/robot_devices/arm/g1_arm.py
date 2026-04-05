@@ -48,7 +48,7 @@ class G1_29_ArmController:
         self.kd_wrist = config.kd_wrist
 
         self.all_motor_q = None
-        self.q_target = np.zeros(14)
+        self.q_target = np.array(self.init_pose)  # hold init_pose until write_arm() is called
         self.dq_target = np.zeros(14)
         self.tauff_target = np.zeros(14)
         self.time_target = time.monotonic()
