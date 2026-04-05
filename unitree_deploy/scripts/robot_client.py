@@ -22,8 +22,8 @@ from unitree_deploy.utils.eval_utils import (
 # -----------------------------------------------------------------------------
 os.environ["http_proxy"] = ""
 os.environ["https_proxy"] = ""
-HOST = "127.0.0.1"
-PORT = 8000
+HOST = os.environ.get("INFERENCE_SERVER_HOST", "127.0.0.1")
+PORT = int(os.environ.get("INFERENCE_SERVER_PORT", "8000"))
 BASE_URL = f"http://{HOST}:{PORT}"
 
 # fmt: off

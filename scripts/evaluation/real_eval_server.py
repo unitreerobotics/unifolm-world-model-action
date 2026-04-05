@@ -439,7 +439,7 @@ class Server:
                 "de-normalizing the output actions.")
             return {'result': 'error', 'desc': traceback.format_exc()}
 
-    def run(self, host: str = "127.0.0.1", port: int = 8000) -> None:
+    def run(self, host: str = "0.0.0.0", port: int = 8000) -> None:
         self.app = FastAPI()
         self.app.post("/predict_action")(self.predict_action)
         print(">>> Inference server is ready ... ")
@@ -450,10 +450,14 @@ class Server:
 
 if __name__ == '__main__':
     parser = get_parser()
+    parser.add_argument("--host", type=str, default="0.0.0.0",
+                        help="Host address for the inference server.")
+    parser.add_argument("--port", type=int, default=8000,
+                        help="Port for the inference server.")
     args = parser.parse_args()
     seed = args.seed
     seed_everything(seed)
     rank, gpu_num = 0, 1
     print(">>> Launch inference server ... ")
     server = Server(args)
-    server.run()
+    server.run(host=args.host, port=args.port)
