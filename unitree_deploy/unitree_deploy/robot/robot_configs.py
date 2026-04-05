@@ -169,11 +169,23 @@ def brainco_dual_arm_default_factory(init_pose=None):
     (15-28). On the 23-DOF robot, indices 20-21 (left wrist pitch/yaw)
     and 27-28 (right wrist pitch/yaw) do not exist; the SDK silently
     ignores commands to absent joints. init_pose zeros those slots.
+
+    init_pose matches the G1 Ready Mode arm position so go_start() does
+    not move the arms on startup (avoids conflict with env.step()).
+    Forearm roll (slots 4 and 11) is left at 0.0 — it varies freely
+    between runs and any non-zero value may cause unwanted rotation.
     """
-    # 14 zeros: shoulder×3 + elbow + wristRoll + wristPitch(0) + wristYaw(0) per arm
+    # fmt: off
+    ready_mode_pose = np.array([
+        # left:  ShPitch  ShRoll   ShYaw   Elbow   ForearmRoll  WrPitch(n/a) WrYaw(n/a)
+                  0.29,    0.13,    0.0,    0.978,  0.0,         0.0,         0.0,
+        # right: ShPitch  ShRoll   ShYaw   Elbow   ForearmRoll  WrPitch(n/a) WrYaw(n/a)
+                  0.29,   -0.13,    0.0,    0.981,  0.0,         0.0,         0.0,
+    ])
+    # fmt: on
     return {
         "g1": G1ArmConfig(
-            init_pose=np.zeros(14) if init_pose is None else init_pose,
+            init_pose=ready_mode_pose if init_pose is None else init_pose,
             motors=g1_motors,
             mock=False,
         ),
