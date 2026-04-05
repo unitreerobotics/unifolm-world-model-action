@@ -107,11 +107,7 @@ def save_results(video: torch.Tensor, filename: str, fps: int = 8) -> None:
     grid = torch.stack(frame_grids, dim=0)
     grid = (grid + 1.0) / 2.0
     grid = (grid * 255).to(torch.uint8).permute(0, 2, 3, 1)
-    torchvision.io.write_video(filename,
-                               grid,
-                               fps=fps,
-                               video_codec='h264',
-                               options={'crf': '10'})
+    imageio.mimsave(filename, list(grid.numpy()), fps=fps)
 
 
 def get_latent_z(model: nn.Module, videos: torch.Tensor) -> torch.Tensor:
@@ -443,7 +439,7 @@ class Server:
                 "de-normalizing the output actions.")
             return {'result': 'error', 'desc': traceback.format_exc()}
 
-    def run(self, host: str = "127.0.0.1", port: int = 8000) -> None:
+    def run(self, host: str = "0.0.0.0", port: int = 8000) -> None:
         self.app = FastAPI()
         self.app.post("/predict_action")(self.predict_action)
         print(">>> Inference server is ready ... ")
@@ -454,10 +450,14 @@ class Server:
 
 if __name__ == '__main__':
     parser = get_parser()
+    parser.add_argument("--host", type=str, default="0.0.0.0",
+                        help="Host address for the inference server.")
+    parser.add_argument("--port", type=int, default=8000,
+                        help="Port for the inference server.")
     args = parser.parse_args()
     seed = args.seed
     seed_everything(seed)
     rank, gpu_num = 0, 1
     print(">>> Launch inference server ... ")
     server = Server(args)
-    server.run()
+    server.run(host=args.host, port=args.port)

@@ -240,15 +240,11 @@ class DinoSigLIPViTBackbone(VisionBackbone):
         siglip_normalizer = Normalize(
             mean=torch.tensor([0.5000, 0.5000, 0.5000]),
             std=torch.tensor([0.5000, 0.5000, 0.5000]))
+        device = next(self.dino_featurizer.parameters()).device
         pixel_values = {
-            'dino': dino_normalizer(img),
-            'siglip': siglip_normalizer(img)
+            'dino': dino_normalizer(img).to(device),
+            'siglip': siglip_normalizer(img).to(device)
         }
-
-        if self.on_gpu:
-            pixel_values = {k: v.cuda() for k, v in pixel_values.items()}
-        elif next(self.dino_featurizer.parameters()).device.type != 'cpu':
-            self.on_gpu = True
         """Runs the transformed image/pixel tensors through each vision backbone, returning concatenated patches."""
         dino_patches = self.dino_featurizer(pixel_values["dino"])
         siglip_patches = self.siglip_featurizer(pixel_values["siglip"])

@@ -28,7 +28,7 @@ pip install -e .
 pip install -e ".[lerobot]"
 
 git clone https://github.com/unitreerobotics/unitree_sdk2_python.git
-cd unitree_sdk2_python  && pip install -e . && cd ..
+cd unitree_sdk2_python && pip install -e . && cd ..
 ```
 
 ---
@@ -212,7 +212,31 @@ Run the following tests:
 
 # 5. 🤔 Troubleshooting
 
-For assistance, contact the project maintainer or refer to the respective GitHub repository documentation. 📖
+## `unitree_sdk2_python` install fails with "Could not locate cyclonedds"
+
+The `cyclonedds` Python package builds from source and needs to find the CycloneDDS C library at build time.
+If you see:
+
+```
+Could not locate cyclonedds. Try to set CYCLONEDDS_HOME or CMAKE_PREFIX_PATH
+```
+
+Set `CYCLONEDDS_HOME` to your CycloneDDS install prefix before running `pip install`:
+
+```bash
+# Unitree G1 ships with CycloneDDS pre-built in ~/cyclonedds_ws:
+export CYCLONEDDS_HOME=~/cyclonedds_ws/install/cyclonedds
+
+cd unitree_sdk2_python && pip install -e . && cd ..
+```
+
+You can persist this in your shell config so it applies to future installs:
+
+```bash
+echo 'export CYCLONEDDS_HOME=~/cyclonedds_ws/install/cyclonedds' >> ~/.bashrc
+```
+
+For assistance with other issues, contact the project maintainer or refer to the respective GitHub repository documentation. 📖
 
 
 # 6. 🙏 Acknowledgement
