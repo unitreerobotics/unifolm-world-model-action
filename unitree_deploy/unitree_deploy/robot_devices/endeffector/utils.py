@@ -1,6 +1,7 @@
 from typing import Protocol
 
 from unitree_deploy.robot_devices.endeffector.configs import (
+    BrancoDualHandConfig,
     Dex1_GripperConfig,
     EndEffectorConfig,
 )
@@ -32,6 +33,11 @@ def make_endeffector_motors_buses_from_configs(
             from unitree_deploy.robot_devices.endeffector.gripper import Dex1_Gripper_Controller
 
             endeffector_motors_buses[key] = Dex1_Gripper_Controller(cfg)
+
+        elif cfg.type == "brainco_dual":
+            from unitree_deploy.robot_devices.endeffector.brainco_hand import Brainco_DualHand_Controller
+
+            endeffector_motors_buses[key] = Brainco_DualHand_Controller(cfg)
 
         else:
             raise ValueError(f"The motor type '{cfg.type}' is not valid.")
