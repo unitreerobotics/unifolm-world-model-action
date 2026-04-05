@@ -33,8 +33,15 @@ INIT_POSE = {
     'z1_realsense': np.array([-0.06940782, 1.4751548, -0.7554075, 1.0501366, 0.02931615, -0.02810347, -0.99238837], dtype=np.float32),
     # 14 arm DOFs (indices 0-13 map to G1_29_JointArmIndex 15-28; slots 5,6,12,13 are phantom
     # wrist pitch/yaw absent on 23-DOF robot) + 12 hand DOFs (6 per Brainco hand, 0.0=open)
-    # TODO: replace arm values with a pose calibrated for your specific robot
-    'g1_brainco': np.zeros(26, dtype=np.float32),
+    # Arm values match the G1 Ready Mode position observed on this robot (elbows ~56° bent).
+    'g1_brainco': np.array([
+        # left:  ShPitch  ShRoll   ShYaw    Elbow    ForearmRoll  WrPitch(0) WrYaw(0)
+                  0.285,   0.127,   0.014,   0.979,   0.035,       0.0,       0.0,
+        # right: ShPitch  ShRoll   ShYaw    Elbow    ForearmRoll  WrPitch(0) WrYaw(0)
+                  0.291,  -0.127,   0.005,   0.983,  -0.047,       0.0,       0.0,
+        # hands: all open (12 zeros)
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    ], dtype=np.float32),
 }
 ZERO_ACTION = {
     'g1_dex1': torch.zeros(16, dtype=torch.float32),
