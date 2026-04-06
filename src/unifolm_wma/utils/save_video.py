@@ -2,6 +2,7 @@ import os
 import torch
 import numpy as np
 import torchvision
+import imageio
 
 from tqdm import tqdm
 from PIL import Image
@@ -28,11 +29,7 @@ def frames_to_mp4(frame_dir, output_path, fps):
 
     videos = read_first_n_frames(frame_dir, num_frames=None)
     videos = videos.mul(255).to(torch.uint8).permute(0, 2, 3, 1)
-    torchvision.io.write_video(output_path,
-                               videos,
-                               fps=fps,
-                               video_codec='h264',
-                               options={'crf': '10'})
+    imageio.mimsave(output_path, list(videos.numpy()), fps=fps)
 
 
 def tensor_to_mp4(video, savepath, fps, rescale=True, nrow=None):
@@ -52,13 +49,8 @@ def tensor_to_mp4(video, savepath, fps, rescale=True, nrow=None):
     grid = torch.clamp(grid.float(), -1., 1.)
     if rescale:
         grid = (grid + 1.0) / 2.0
-    grid = (grid * 255).to(torch.uint8).permute(
-        0, 2, 3, 1)
-    torchvision.io.write_video(savepath,
-                               grid,
-                               fps=fps,
-                               video_codec='h264',
-                               options={'crf': '10'})
+    grid = (grid * 255).to(torch.uint8).permute(0, 2, 3, 1)
+    imageio.mimsave(savepath, list(grid.numpy()), fps=fps)
 
 
 def tensor2videogrids(video, root, filename, fps, rescale=True, clamp=True):
@@ -81,11 +73,7 @@ def tensor2videogrids(video, root, filename, fps, rescale=True, clamp=True):
     grid = (grid * 255).to(torch.uint8).permute(
         0, 2, 3, 1)
     path = os.path.join(root, filename)
-    torchvision.io.write_video(path,
-                               grid,
-                               fps=fps,
-                               video_codec='h264',
-                               options={'crf': '10'})
+    imageio.mimsave(path, list(grid.numpy()), fps=fps)
 
 
 def log_local(batch_logs, save_dir, filename, save_fps=10, rescale=True):
@@ -129,11 +117,7 @@ def log_local(batch_logs, save_dir, filename, save_fps=10, rescale=True):
                 grid = (grid + 1.0) / 2.0
             grid = (grid * 255).to(torch.uint8).permute(0, 2, 3, 1)
             path = os.path.join(save_dir, "%s-%s.mp4" % (key, filename))
-            torchvision.io.write_video(path,
-                                       grid,
-                                       fps=save_fps,
-                                       video_codec='h264',
-                                       options={'crf': '10'})
+            imageio.mimsave(path, list(grid.numpy()), fps=save_fps)
 
             # Save frame sheet
             img = value
@@ -251,8 +235,4 @@ def npz_to_video_grid(data_path,
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
     frame_grids = (torch.stack(frame_grids) * 255).to(torch.uint8).permute(
         0, 2, 3, 1)
-    torchvision.io.write_video(out_path,
-                               frame_grids,
-                               fps=fps,
-                               video_codec='h264',
-                               options={'crf': '10'})
+    imageio.mimsave(out_path, list(frame_grids.numpy()), fps=fps)

@@ -1,6 +1,7 @@
 import logging
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import einops
 
 from einops import rearrange, repeat
@@ -90,12 +91,25 @@ class CrossAttention(nn.Module):
                     b * self.heads, t.shape[1], self.dim_head).contiguous(),
             (q, k, v),
         )
+
+        # NVIDIA DGX Spark CUDA 12.1 xformers compatibility
+        orig_dtype = q.dtype
+        q, k, v = q.to(torch.bfloat16), k.to(torch.bfloat16), v.to(torch.bfloat16)
+
         # actually compute the attention, what we cannot get enough of
-        out = xformers.ops.memory_efficient_attention(q,
-                                                      k,
-                                                      v,
-                                                      attn_bias=None,
-                                                      op=None)
+        if q.is_cuda and torch.cuda.get_device_capability(q.device)[0] >= 12:
+            out = F.scaled_dot_product_attention(q.unsqueeze(1),
+                                                 k.unsqueeze(1),
+                                                 v.unsqueeze(1),
+                                                 attn_mask=None).squeeze(1)
+        else:
+            out = xformers.ops.memory_efficient_attention(q,
+                                                          k,
+                                                          v,
+                                                          attn_bias=None,
+                                                          op=None)
+        
+        out = out.to(orig_dtype)
         out = (out.unsqueeze(0).reshape(
             b, self.heads, out.shape[1],
             self.dim_head).permute(0, 2, 1,

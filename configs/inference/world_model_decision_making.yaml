@@ -236,5 +236,5 @@ data:
         n_obs_steps: ${model.params.n_obs_steps_imagen}
         max_action_dim: ${model.params.agent_action_dim}
         max_state_dim: ${model.params.agent_state_dim}
-    dataset_and_weights: 
+    dataset_and_weights:
       unitree_g1_pack_camera: 1.0

@@ -1,6 +1,7 @@
 from typing import Protocol
 
 from unitree_deploy.robot.robot_configs import (
+    G1_Brainco_RobotConfig,
     G1_Dex1_Imageclint_RobotConfig,
     RobotConfig,
     Z1_Realsense_RobotConfig,
@@ -32,6 +33,8 @@ def make_robot_config(robot_type: str, **kwargs) -> RobotConfig:
         return Z1dual_Dex1_Opencv_RobotConfig(**kwargs)
     elif robot_type == "g1_dex1":
         return G1_Dex1_Imageclint_RobotConfig(**kwargs)
+    elif robot_type == "g1_brainco":
+        return G1_Brainco_RobotConfig(**kwargs)
     else:
         raise ValueError(f"Robot type '{robot_type}' is not available.")
 

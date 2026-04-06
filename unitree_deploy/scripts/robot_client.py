@@ -22,8 +22,8 @@ from unitree_deploy.utils.eval_utils import (
 # -----------------------------------------------------------------------------
 os.environ["http_proxy"] = ""
 os.environ["https_proxy"] = ""
-HOST = "127.0.0.1"
-PORT = 8000
+HOST = os.environ.get("INFERENCE_SERVER_HOST", "127.0.0.1")
+PORT = int(os.environ.get("INFERENCE_SERVER_PORT", "8000"))
 BASE_URL = f"http://{HOST}:{PORT}"
 
 # fmt: off
@@ -31,18 +31,59 @@ INIT_POSE = {
     'g1_dex1': np.array([0.10559805, 0.02726714, -0.01210221, -0.33341318, -0.22513399, -0.02627627, -0.15437093,  0.1273793 , -0.1674708 , -0.11544029, -0.40095493,  0.44332668,  0.11566751,  0.3936641, 5.4, 5.4], dtype=np.float32),
     'z1_dual_dex1_realsense': np.array([-1.0262332,  1.4281361, -1.2149128,  0.6473399, -0.12425245, 0.44945636,  0.89584476,  1.2593982, -1.0737865,  0.6672816, 0.39730102, -0.47400007, 0.9894176, 0.9817477 ], dtype=np.float32),
     'z1_realsense': np.array([-0.06940782, 1.4751548, -0.7554075, 1.0501366, 0.02931615, -0.02810347, -0.99238837], dtype=np.float32),
+    # 14 arm DOFs (indices 0-13 map to G1_29_JointArmIndex 15-28; slots 5,6,12,13 are phantom
+    # wrist pitch/yaw absent on 23-DOF robot) + 12 hand DOFs (6 per Brainco hand, 0.0=open).
+    # Arm values match G1ArmConfig.init_pose in brainco_dual_arm_default_factory — keeping
+    # them identical prevents go_start() and env.step() from fighting each other on startup.
+    'g1_brainco': np.array([
+        # left:  ShPitch  ShRoll   ShYaw   Elbow   ForearmRoll  WrPitch(0) WrYaw(0)
+                  0.29,    0.13,    0.0,    0.978,  0.0,         0.0,       0.0,
+        # right: ShPitch  ShRoll   ShYaw   Elbow   ForearmRoll  WrPitch(0) WrYaw(0)
+                  0.29,   -0.13,    0.0,    0.981,  0.0,         0.0,       0.0,
+        # hands: all open (12 zeros)
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    ], dtype=np.float32),
 }
 ZERO_ACTION = {
     'g1_dex1': torch.zeros(16, dtype=torch.float32),
     'z1_dual_dex1_realsense': torch.zeros(14, dtype=torch.float32),
     'z1_realsense': torch.zeros(7, dtype=torch.float32),
+    # 12-dim: the model was trained on ee_state/ee_action (6 arm joints per arm, no hands).
+    'g1_brainco': torch.zeros(12, dtype=torch.float32),
 }
 CAM_KEY = {
     'g1_dex1': 'cam_right_high',
     'z1_dual_dex1_realsense': 'cam_high',
     'z1_realsense': 'cam_high',
+    'g1_brainco': 'cam_right_high',
 }
 # fmt: on
+
+
+def _g1_brainco_qpos_to_ee_state(qpos: np.ndarray) -> np.ndarray:
+    """Extract 12-dim ee_state from 26-dim g1_brainco qpos.
+
+    The training dataset stores ee_state as the first 6 joints of each arm
+    (qpos[0:6] = left, qpos[7:13] = right), matching the 12-dim normalizer
+    built from G1_WBT_Brainco_Pickup_Pillow.  The phantom wrist-yaw slots
+    (indices 6 and 13) and the 12 hand joints (indices 14-25) are omitted.
+    """
+    return np.concatenate([qpos[0:6], qpos[7:13]])
+
+
+def _g1_brainco_ee_action_to_qpos(ee_action: np.ndarray) -> np.ndarray:
+    """Map 12-dim predicted ee_action back to 26-dim qpos for robot execution.
+
+    Inserts zeros for phantom wrist-yaw slots (6 and 13) and keeps hands
+    fully open (zeros at indices 14-25).
+    """
+    qpos = np.zeros(26, dtype=np.float32)
+    qpos[0:6] = ee_action[0:6]    # left arm joints 0-5 (slot 5 = wrist pitch, ignored by hw)
+    # qpos[6] = 0.0                # left wrist yaw (phantom)
+    qpos[7:13] = ee_action[6:12]  # right arm joints 0-5
+    # qpos[13] = 0.0               # right wrist yaw (phantom)
+    # qpos[14:26] = 0.0            # hands open
+    return qpos
 
 
 def prepare_observation(args: argparse.Namespace, obs: Any) -> OrderedDict:
@@ -51,11 +92,16 @@ def prepare_observation(args: argparse.Namespace, obs: Any) -> OrderedDict:
     """
     rgb_image = cv2.cvtColor(
         obs.observation["images"][CAM_KEY[args.robot_type]], cv2.COLOR_BGR2RGB)
+    if args.robot_type == 'g1_brainco':
+        # The model was trained on 12-dim ee_state (6 arm joints per arm, no hands).
+        state = _g1_brainco_qpos_to_ee_state(obs.observation["qpos"])
+    else:
+        state = obs.observation["qpos"]
     observation = {
         "observation.images.top":
         torch.from_numpy(rgb_image).permute(2, 0, 1),
         "observation.state":
-        torch.from_numpy(obs.observation["qpos"]),
+        torch.from_numpy(state),
         "action": ZERO_ACTION[args.robot_type],
     }
     return OrderedDict(observation)
@@ -97,6 +143,9 @@ def run_policy(
         # Execute the actions
         for n in range(args.exe_steps):
             action = actions[n].cpu().numpy()
+            if args.robot_type == 'g1_brainco':
+                # Model predicts 12-dim ee_action; expand to 26-dim for the robot controller.
+                action = _g1_brainco_ee_action_to_qpos(action)
             print(f">>> Exec => step {n} action: {action}", flush=True)
             print("---------------------------------------------")
 

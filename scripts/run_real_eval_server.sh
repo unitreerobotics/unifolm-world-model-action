@@ -9,7 +9,7 @@ datasets=(
 
 
 for dataset in "${datasets[@]}"; do
-    CUDA_VISIBLE_DEVICES=0 python3 scripts/evaluation/real_eval_server.py \
+    CUDA_VISIBLE_DEVICES=0 python3 -u scripts/evaluation/real_eval_server.py \
     --seed ${seed} \
     --ckpt_path $ckpt \
     --config $config \

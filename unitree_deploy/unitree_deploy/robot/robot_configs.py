@@ -17,6 +17,7 @@ from unitree_deploy.robot_devices.cameras.configs import (
     OpenCVCameraConfig,
 )
 from unitree_deploy.robot_devices.endeffector.configs import (
+    BrancoDualHandConfig,
     Dex1_GripperConfig,
     EndEffectorConfig,
 )
@@ -155,6 +156,42 @@ def usb_camera_default_factory():
 # ======================== endeffector =================================
 
 
+def brainco_default_factory():
+    return {
+        "hands": BrancoDualHandConfig(),
+    }
+
+
+def brainco_dual_arm_default_factory(init_pose=None):
+    """G1 23-DOF arm config: no wrist pitch/yaw, forearm roll only.
+
+    The G1_29_ArmController sends commands to all 14 arm motor indices
+    (15-28). On the 23-DOF robot, indices 20-21 (left wrist pitch/yaw)
+    and 27-28 (right wrist pitch/yaw) do not exist; the SDK silently
+    ignores commands to absent joints. init_pose zeros those slots.
+
+    init_pose matches the G1 Ready Mode arm position so go_start() does
+    not move the arms on startup (avoids conflict with env.step()).
+    Forearm roll (slots 4 and 11) is left at 0.0 — it varies freely
+    between runs and any non-zero value may cause unwanted rotation.
+    """
+    # fmt: off
+    ready_mode_pose = np.array([
+        # left:  ShPitch  ShRoll   ShYaw   Elbow   ForearmRoll  WrPitch(n/a) WrYaw(n/a)
+                  0.29,    0.13,    0.0,    0.978,  0.0,         0.0,         0.0,
+        # right: ShPitch  ShRoll   ShYaw   Elbow   ForearmRoll  WrPitch(n/a) WrYaw(n/a)
+                  0.29,   -0.13,    0.0,    0.981,  0.0,         0.0,         0.0,
+    ])
+    # fmt: on
+    return {
+        "g1": G1ArmConfig(
+            init_pose=ready_mode_pose if init_pose is None else init_pose,
+            motors=g1_motors,
+            mock=False,
+        ),
+    }
+
+
 def dex1_default_factory():
     return {
         "left": Dex1_GripperConfig(
@@ -268,3 +305,17 @@ class G1_Dex1_Imageclint_RobotConfig(UnitreeRobotConfig):
     cameras: dict[str, CameraConfig] = field(default_factory=g1_image_client_default_factory)
     arm: dict[str, ArmConfig] = field(default_factory=g1_dual_arm_default_factory)
     endeffector: dict[str, EndEffectorConfig] = field(default_factory=dex1_default_factory)
+
+
+# ======= Arm:g1 23-DOF, Endeffector:Brainco Revo2 dual hands, Camera:imageclient =======
+# Robot specifics:
+#   - Waist: 1 DOF (yaw/twist only, index 12)
+#   - Arms:  5 DOF each (shoulder ×3, elbow, forearm roll; NO wrist pitch/yaw)
+#   - Hands: Brainco Revo2 five-finger, USB ports /dev/ttyUSB1 (left) & /dev/ttyUSB2 (right)
+#   - Action space: 14 arm DOFs (4 phantom wrist slots kept for SDK compat) + 12 hand DOFs = 26
+@RobotConfig.register_subclass("g1_brainco")
+@dataclass
+class G1_Brainco_RobotConfig(UnitreeRobotConfig):
+    cameras: dict[str, CameraConfig] = field(default_factory=g1_image_client_default_factory)
+    arm: dict[str, ArmConfig] = field(default_factory=brainco_dual_arm_default_factory)
+    endeffector: dict[str, EndEffectorConfig] = field(default_factory=brainco_default_factory)
